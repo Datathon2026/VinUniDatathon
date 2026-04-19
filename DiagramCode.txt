@@ -1,0 +1,156 @@
+Table geography {
+  zip int [pk]
+  city varchar
+  region varchar
+  district varchar
+}
+
+Table products {
+  product_id int [pk]
+  product_name varchar
+  category varchar
+  segment varchar
+  size varchar
+  color varchar
+  price float
+  cogs float
+}
+
+Table promotions {
+  promo_id varchar [pk]
+  promo_name varchar
+  promo_type varchar
+  discount_value float
+  start_date date
+  end_date date
+  applicable_category varchar
+  promo_channel varchar
+  stackable_flag int
+  min_order_value float
+}
+
+Table customers {
+  customer_id int [pk]
+  zip int
+  city varchar
+  signup_date date
+  gender varchar
+  age_group varchar
+  acquisition_channel varchar
+}
+
+Table orders {
+  order_id int [pk]
+  order_date date
+  customer_id int
+  zip int
+  order_status varchar
+  payment_method varchar
+  device_type varchar
+  order_source varchar
+}
+
+Table order_items {
+  order_id int
+  product_id int
+  quantity int
+  unit_price float
+  discount_amount float
+  promo_id varchar
+  promo_id_2 varchar
+}
+
+Table payments {
+  order_id int [pk]
+  payment_method varchar
+  payment_value float
+  installments int
+}
+
+Table shipments {
+  order_id int [pk]
+  ship_date date
+  delivery_date date
+  shipping_fee float
+}
+
+Table returns {
+  return_id varchar [pk]
+  order_id int
+  product_id int
+  return_date date
+  return_reason varchar
+  return_quantity int
+  refund_amount float
+}
+
+Table reviews {
+  review_id varchar [pk]
+  order_id int
+  product_id int
+  customer_id int
+  review_date date
+  rating int
+  review_title varchar
+}
+
+Table sales {
+  date date [pk]
+  revenue float
+  cogs float
+}
+
+Table inventory {
+  snapshot_date date
+  product_id int
+  stock_on_hand int
+  units_received int
+  units_sold int
+  stockout_days int
+  days_of_supply float
+  fill_rate float
+  stockout_flag int
+  overstock_flag int
+  reorder_flag int
+  sell_through_rate float
+  product_name varchar
+  category varchar
+  segment varchar
+  year int
+  month int
+
+  Indexes {
+    (snapshot_date, product_id) [pk]
+  }
+}
+
+Table web_traffic {
+  date date [pk]
+  sessions int
+  unique_visitors int
+  page_views int
+  bounce_rate float
+  avg_session_duration_sec float
+  traffic_source varchar
+}
+
+Ref: customers.zip > geography.zip
+Ref: orders.customer_id > customers.customer_id
+Ref: orders.zip > geography.zip
+
+Ref: order_items.order_id > orders.order_id
+Ref: order_items.product_id > products.product_id
+Ref: order_items.promo_id > promotions.promo_id
+Ref: order_items.promo_id_2 > promotions.promo_id
+
+Ref: payments.order_id > orders.order_id
+Ref: shipments.order_id > orders.order_id
+
+Ref: returns.order_id > orders.order_id
+Ref: returns.product_id > products.product_id
+
+Ref: reviews.order_id > orders.order_id
+Ref: reviews.product_id > products.product_id
+Ref: reviews.customer_id > customers.customer_id
+
+Ref: inventory.product_id > products.product_id
